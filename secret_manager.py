@@ -28,11 +28,20 @@ class SecretManager:
         self._log = logging.getLogger(self.__class__.__name__)
 
     def do_derivation(self, salt:bytes, key:bytes)->bytes:
-        raise NotImplemented()
+        self._token = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            lenth=self.TOKEN_LENGTH,             #lorsqu'on utilise des constantes définies dans la classe,
+                                                # on doit utiliser self. pour les appeler dans une fonction
+            salt=salt,
+            iterations=self.ITERATION,
+            ).derive(key)
+        return self._token
 
 
     def create(self)->Tuple[bytes, bytes, bytes]:
-        raise NotImplemented()
+        self._token = self.do_derivation(self._salt,self._key)
+        return (self._token,self._salt, self._key)
+
 
 
     def bin_to_b64(self, data:bytes)->str:
